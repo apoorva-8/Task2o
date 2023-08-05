@@ -1,0 +1,174 @@
+import numpy as np
+import pandas as pd
+import os
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+print(os.getcwd())
+C:\Users\apoor
+data=pd.read_csv("Unemployment_Rate_upto_11_2020.csv")
+data.head()
+Region	Date	Frequency	Estimated Unemployment Rate (%)	Estimated Employed	Estimated Labour Participation Rate (%)	Region.1	longitude	latitude
+0	Andhra Pradesh	31-01-2020	M	5.48	16635535	41.02	South	15.9129	79.74
+1	Andhra Pradesh	29-02-2020	M	5.83	16545652	40.90	South	15.9129	79.74
+2	Andhra Pradesh	31-03-2020	M	5.79	15881197	39.18	South	15.9129	79.74
+3	Andhra Pradesh	30-04-2020	M	20.51	11336911	33.10	South	15.9129	79.74
+4	Andhra Pradesh	31-05-2020	M	17.43	12988845	36.46	South	15.9129	79.74
+data
+Region	Date	Frequency	Estimated Unemployment Rate (%)	Estimated Employed	Estimated Labour Participation Rate (%)	Region.1	longitude	latitude
+0	Andhra Pradesh	31-01-2020	M	5.48	16635535	41.02	South	15.9129	79.740
+1	Andhra Pradesh	29-02-2020	M	5.83	16545652	40.90	South	15.9129	79.740
+2	Andhra Pradesh	31-03-2020	M	5.79	15881197	39.18	South	15.9129	79.740
+3	Andhra Pradesh	30-04-2020	M	20.51	11336911	33.10	South	15.9129	79.740
+4	Andhra Pradesh	31-05-2020	M	17.43	12988845	36.46	South	15.9129	79.740
+...	...	...	...	...	...	...	...	...	...
+262	West Bengal	30-06-2020	M	7.29	30726310	40.39	East	22.9868	87.855
+263	West Bengal	31-07-2020	M	6.83	35372506	46.17	East	22.9868	87.855
+264	West Bengal	31-08-2020	M	14.87	33298644	47.48	East	22.9868	87.855
+265	West Bengal	30-09-2020	M	9.35	35707239	47.73	East	22.9868	87.855
+266	West Bengal	31-10-2020	M	9.98	33962549	45.63	East	22.9868	87.855
+267 rows × 9 columns
+
+data.columns= ["States","Date","Frequency",
+               "Estimated Unemployment Rate",
+               "Estimated Employed",
+               "Estimated Labour Participation Rate",
+               "Region","longitude","latitude"]
+     
+data.head()
+States	Date	Frequency	Estimated Unemployment Rate	Estimated Employed	Estimated Labour Participation Rate	Region	longitude	latitude
+0	Andhra Pradesh	31-01-2020	M	5.48	16635535	41.02	South	15.9129	79.74
+1	Andhra Pradesh	29-02-2020	M	5.83	16545652	40.90	South	15.9129	79.74
+2	Andhra Pradesh	31-03-2020	M	5.79	15881197	39.18	South	15.9129	79.74
+3	Andhra Pradesh	30-04-2020	M	20.51	11336911	33.10	South	15.9129	79.74
+4	Andhra Pradesh	31-05-2020	M	17.43	12988845	36.46	South	15.9129	79.74
+data.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 267 entries, 0 to 266
+Data columns (total 9 columns):
+ #   Column                               Non-Null Count  Dtype  
+---  ------                               --------------  -----  
+ 0   States                               267 non-null    object 
+ 1   Date                                 267 non-null    object 
+ 2   Frequency                            267 non-null    object 
+ 3   Estimated Unemployment Rate          267 non-null    float64
+ 4   Estimated Employed                   267 non-null    int64  
+ 5   Estimated Labour Participation Rate  267 non-null    float64
+ 6   Region                               267 non-null    object 
+ 7   longitude                            267 non-null    float64
+ 8   latitude                             267 non-null    float64
+dtypes: float64(4), int64(1), object(4)
+memory usage: 18.9+ KB
+data.describe()
+Estimated Unemployment Rate	Estimated Employed	Estimated Labour Participation Rate	longitude	latitude
+count	267.000000	2.670000e+02	267.000000	267.000000	267.000000
+mean	12.236929	1.396211e+07	41.681573	22.826048	80.532425
+std	10.803283	1.336632e+07	7.845419	6.270731	5.831738
+min	0.500000	1.175420e+05	16.770000	10.850500	71.192400
+25%	4.845000	2.838930e+06	37.265000	18.112400	76.085600
+50%	9.650000	9.732417e+06	40.390000	23.610200	79.019300
+75%	16.755000	2.187869e+07	44.055000	27.278400	85.279900
+max	75.850000	5.943376e+07	69.690000	33.778200	92.937600
+#Check if this dataset contains missing values or not:
+print(data.isnull().sum())
+States                                 0
+Date                                   0
+Frequency                              0
+Estimated Unemployment Rate            0
+Estimated Employed                     0
+Estimated Labour Participation Rate    0
+Region                                 0
+longitude                              0
+latitude                               0
+dtype: int64
+#correlation between the features of this dataset:
+plt.style.use('seaborn-whitegrid')
+plt.figure(figsize=(12, 10))
+sns.heatmap(data.corr())
+plt.show()
+
+#visualize the data to analyze the unemployment rate. estimated number of employees according to different regions of India:
+data.columns= ["States","Date","Frequency",
+               "Estimated Unemployment Rate","Estimated Employed",
+               "Estimated Labour Participation Rate","Region",
+               "longitude","latitude"]
+plt.title("Indian Unemployment")
+sns.histplot(x="Estimated Employed", hue="Region", data=data)
+plt.show()
+     
+
+#nemployment rate according to different regions of
+plt.figure(figsize=(8, 6))
+plt.title("Indian Unemployment")
+sns.histplot(x="Estimated Unemployment Rate", hue="Region", data=data)
+plt.show()
+     
+
+#create a dashboard to analyze the unemployment rate of each Indian state by region
+unemploment = data[["States", "Region", "Estimated Unemployment Rate"]]
+figure = px.sunburst(unemploment, path=["Region", "States"], 
+                     values="Estimated Unemployment Rate", 
+                     width=700, height=700, color_continuous_scale="RdY1Gn", 
+                     title="Unemployment Rate in India")
+figure.show()
+sns.pairplot(data)
+<seaborn.axisgrid.PairGrid at 0x205a76cc2b0>
+
+X = data[['Estimated Unemployment Rate', 'Estimated Employed', 'Estimated Labour Participation Rate',
+       'longitude', 'latitude']]
+
+y = data['Estimated Employed']
+     
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.40)
+X_train
+     
+Estimated Unemployment Rate	Estimated Employed	Estimated Labour Participation Rate	longitude	latitude
+216	2.16	23651626	36.62	11.1271	78.6569
+162	23.76	6865693	25.23	20.9517	85.0985
+189	10.97	20641716	40.51	27.0238	74.2179
+258	4.92	36964178	47.74	22.9868	87.8550
+226	2.86	17578739	56.58	18.1124	79.0193
+...	...	...	...	...	...
+6	8.34	15431615	38.91	15.9129	79.7400
+204	12.49	244462	48.49	27.5330	88.5122
+71	25.77	7322942	44.21	29.0588	76.0856
+173	58.19	172308	33.19	11.9416	79.8083
+161	13.08	12272109	39.62	20.9517	85.0985
+160 rows × 5 columns
+
+from sklearn.linear_model import LinearRegression
+     
+lm = LinearRegression()
+     
+#fit the model inside it
+lm.fit(X_train, y_train)
+     
+LinearRegression()
+#evaluating model
+coeff_data = pd.DataFrame(lm.coef_, X.columns, columns=['Coefficient'])
+     
+#This table is saying 
+#if one unit is increase then area income will increase by $21
+coeff_data
+     
+Coefficient
+Estimated Unemployment Rate	-4.058398e-11
+Estimated Employed	1.000000e+00
+Estimated Labour Participation Rate	2.437563e-11
+longitude	1.023856e-11
+latitude	-1.748495e-11
+#Predict the model
+predictions = lm.predict(X_test)
+     
+#plotting the prediction agains the target variable
+plt.scatter(y_test, predictions)
+<matplotlib.collections.PathCollection at 0x19cd6846550>
+
+sns.distplot((y_test-predictions), bins=50);
+C:\Users\apoor\anaconda3\lib\site-packages\seaborn\distributions.py:2619: FutureWarning:
+
+`distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
+
+
+ 
